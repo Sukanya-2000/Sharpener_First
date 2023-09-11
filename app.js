@@ -16,20 +16,28 @@ filter.addEventListener('keyup', filterItems);
 function addItem(e){
   e.preventDefault();
 
-  // Get input value
-  var newItem = document.getElementById('item').value;
+  // Get input values
+  var newItemName = document.getElementById('item').value;
+  var newItemDescription = document.getElementById('description').value;
 
   // Create new li element
   var li = document.createElement('li');
   // Add class
   li.className = 'list-group-item';
-  // Add text node with input value
-  li.appendChild(document.createTextNode(newItem));
 
-  // Create del button element
+  // Create span elements for item name and description
+  var itemNameSpan = document.createElement('span');
+  itemNameSpan.className = 'item-name';
+  itemNameSpan.appendChild(document.createTextNode(newItemName));
+
+  var itemDescriptionSpan = document.createElement('span');
+  itemDescriptionSpan.className = 'item-description';
+  itemDescriptionSpan.appendChild(document.createTextNode(newItemDescription));
+
+  // Create delete button element
   var deleteBtn = document.createElement('button');
 
-  // Add classes to del button
+  // Add classes to delete button
   deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
 
   // Append text node
@@ -44,12 +52,18 @@ function addItem(e){
   // Append text node
   editBtn.appendChild(document.createTextNode('Edit'));
 
-  // Append buttons to li
+  // Append spans and buttons to li
+  li.appendChild(itemNameSpan);
+  li.appendChild(itemDescriptionSpan);
   li.appendChild(deleteBtn);
   li.appendChild(editBtn);
 
   // Append li to list
   itemList.appendChild(li);
+
+  // Clear input fields
+  document.getElementById('item').value = '';
+  document.getElementById('description').value = '';
 }
 
 // Remove item
@@ -70,8 +84,9 @@ function filterItems(e){
   var items = itemList.getElementsByTagName('li');
   // Convert to an array
   Array.from(items).forEach(function(item){
-    var itemName = item.firstChild.textContent;
-    if(itemName.toLowerCase().indexOf(text) != -1){
+    var itemName = item.querySelector('.item-name').textContent.toLowerCase();
+    var itemDescription = item.querySelector('.item-description').textContent.toLowerCase();
+    if(itemName.indexOf(text) != -1 || itemDescription.indexOf(text) != -1){
       item.style.display = 'block';
     } else {
       item.style.display = 'none';
