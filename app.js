@@ -1,4 +1,4 @@
-// JavaScript code
+// JavaScript code (app.js)
 var form = document.getElementById('addForm');
 var itemList = document.getElementById('items');
 var filter = document.getElementById('filter');
@@ -12,6 +12,12 @@ itemList.addEventListener('click', removeItem);
 // Filter event
 filter.addEventListener('keyup', filterItems);
 
+// Initialize local storage
+var itemsArray = JSON.parse(localStorage.getItem('items')) || [];
+
+// Load items from local storage
+loadItems();
+
 // Add item
 function addItem(e){
   e.preventDefault();
@@ -19,6 +25,18 @@ function addItem(e){
   // Get input values
   var newItemName = document.getElementById('item').value;
   var newItemDescription = document.getElementById('description').value;
+
+  // Create new item object
+  var newItem = {
+    name: newItemName,
+    description: newItemDescription
+  };
+
+  // Push the new item to the array
+  itemsArray.push(newItem);
+
+  // Save the updated array to local storage
+  localStorage.setItem('items', JSON.stringify(itemsArray));
 
   // Create new li element
   var li = document.createElement('li');
@@ -71,6 +89,17 @@ function removeItem(e){
   if(e.target.classList.contains('delete')){
     if(confirm('Are You Sure?')){
       var li = e.target.parentElement;
+      var itemName = li.querySelector('.item-name').textContent;
+      
+      // Remove the item from the array
+      itemsArray = itemsArray.filter(function(item){
+        return item.name !== itemName;
+      });
+
+      // Update local storage
+      localStorage.setItem('items', JSON.stringify(itemsArray));
+
+      // Remove the li element
       itemList.removeChild(li);
     }
   }
@@ -92,4 +121,37 @@ function filterItems(e){
       item.style.display = 'none';
     }
   });
+}
+
+// Load items from local storage
+function loadItems() {
+  if (itemsArray.length > 0) {
+    itemsArray.forEach(function(item) {
+      var li = document.createElement('li');
+      li.className = 'list-group-item';
+
+      var itemNameSpan = document.createElement('span');
+      itemNameSpan.className = 'item-name';
+      itemNameSpan.appendChild(document.createTextNode(item.name));
+
+      var itemDescriptionSpan = document.createElement('span');
+      itemDescriptionSpan.className = 'item-description';
+      itemDescriptionSpan.appendChild(document.createTextNode(item.description));
+
+      var deleteBtn = document.createElement('button');
+      deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
+      deleteBtn.appendChild(document.createTextNode('X'));
+
+      var editBtn = document.createElement('button');
+      editBtn.className = 'btn btn-primary btn-sm float-right edit';
+      editBtn.appendChild(document.createTextNode('Edit'));
+
+      li.appendChild(itemNameSpan);
+      li.appendChild(itemDescriptionSpan);
+      li.appendChild(deleteBtn);
+      li.appendChild(editBtn);
+
+      itemList.appendChild(li);
+    });
+  }
 }
