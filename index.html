@@ -31,21 +31,25 @@
   </div>
 
   <script>
-    // Add a new <li> element
-    var itemList = document.getElementById("items");
-    var newItem = document.createElement("li");
-    newItem.appendChild(document.createTextNode("New Item"));
-    itemList.appendChild(newItem);
+    // Make the 2nd item have a green background color
+    var secondItem = document.querySelectorAll("#items li")[1];
+    secondItem.style.backgroundColor = "green";
 
-    // Edit the new <li> element using getElementsByClassName
-    var elementsWithClass = document.getElementsByClassName("list-group-item");
-    var newItemByClassName = elementsWithClass[elementsWithClass.length - 1];
-    newItemByClassName.textContent = "Edited Item by ClassName";
+    // Make the 3rd item invisible
+    var thirdItem = document.querySelectorAll("#items li")[2];
+    thirdItem.style.display = "none";
 
-    // Edit the new <li> element using getElementByTagName
-    var listItems = document.getElementById("items").getElementsByTagName("li");
-    var newItemByTagName = listItems[listItems.length - 1];
-    newItemByTagName.textContent = "Edited Item by TagName";
+    // Change the font color to green for the 2nd item in the item list
+    var secondItemFont = document.querySelectorAll("#items li")[1];
+    secondItemFont.style.color = "green";
+
+    // Choose all the odd elements and make their background green
+    var listItems = document.querySelectorAll("#items li");
+    for (var i = 0; i < listItems.length; i++) {
+      if (i % 2 !== 0) {
+        listItems[i].style.backgroundColor = "green";
+      }
+    }
   </script>
 </body>
 </html>
